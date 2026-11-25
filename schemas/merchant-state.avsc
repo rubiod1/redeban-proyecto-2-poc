@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "MerchantState",
+  "namespace": "co.redeban.comercios.v1",
+  "fields": [
+    {"name": "merchantId", "type": "string"},
+    {"name": "estado", "type": {"type": "enum", "name": "Estado", "symbols": ["ACTIVO", "SUSPENDIDO", "BAJA"]}},
+    {"name": "mcc", "type": "string"},
+    {"name": "limiteDiario", "type": "long", "default": 0},
+    {"name": "version", "type": "long"},
+    {"name": "actualizadoEn", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {"name": "canal", "type": ["null", "string"], "default": null}
+  ]
+}

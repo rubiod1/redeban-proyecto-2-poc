@@ -1,0 +1,41 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: gp-publicador
+  title: Golden Path · Publicar nuevo tópico
+  description: Crea un tópico compactado de estado en Kafka, registra su esquema Avro con compatibilidad FULL_TRANSITIVE y deja listo el servicio que publica. Si el esquema rompe el historial, el proceso se detiene y nada llega al tópico. Genera el repo del servicio.
+  tags: [gp2, ecst, publicador, local]
+spec:
+  owner: user:default/guest
+  type: service
+  parameters:
+    - title: Servicio publicador
+      required: [service, owner, costCenter]
+      properties:
+        service:
+          title: Nombre del servicio
+          type: string
+          description: Solo letras, números y guiones. Ejemplo comercios-api.
+          default: comercios-api
+        owner:
+          title: Owner
+          type: string
+          description: Equipo dueño del servicio.
+          default: equipo-comercios
+        costCenter:
+          title: Cost-center
+          type: string
+          default: CC-1001
+  steps:
+    - id: ejecutar
+      name: Ejecutar GP publicador
+      action: poc:ejecutar-gp
+      input:
+        target: gp-publicador
+        service: ${{ parameters.service }}
+        owner: ${{ parameters.owner }}
+        costCenter: ${{ parameters.costCenter }}
+  output:
+    text:
+      - title: Repo generado en local
+        content: generated/${{ parameters.service }}

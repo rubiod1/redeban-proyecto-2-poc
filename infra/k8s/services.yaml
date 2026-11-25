@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comercios-api
+  namespace: comercios
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: comercios-api}
+  template:
+    metadata:
+      labels: {app: comercios-api}
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "comercios-api"
+        dapr.io/app-port: "8080"
+    spec:
+      containers:
+        - name: app
+          image: redeban/comercios-api:poc
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 8080}]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comercios-api
+  namespace: comercios
+spec:
+  selector: {app: comercios-api}
+  ports: [{name: http, port: 8080, targetPort: 8080}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autorizacion-svc
+  namespace: comercios
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: autorizacion-svc}
+  template:
+    metadata:
+      labels: {app: autorizacion-svc}
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "autorizacion-svc"
+        dapr.io/app-port: "8080"
+    spec:
+      containers:
+        - name: app
+          image: redeban/autorizacion-svc:poc
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 8080}]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autorizacion-svc
+  namespace: comercios
+spec:
+  selector: {app: autorizacion-svc}
+  ports: [{name: http, port: 8080, targetPort: 8080}]

@@ -1,0 +1,46 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: gp-suscriptor
+  title: Golden Path · Consumir tópico
+  description: Se suscribe a un tópico de estado existente. Verifica que el tópico y su esquema estén registrados, crea la suscripción de solo lectura y despliega el servicio que mantiene su copia local. Puedes leer desde el inicio del tópico para reconstruir el estado o solo desde eventos nuevos. Genera el repo de materialización.
+  tags: [gp2, ecst, suscriptor, local]
+spec:
+  owner: user:default/guest
+  type: service
+  parameters:
+    - title: Servicio suscriptor
+      required: [service, owner, costCenter, desde]
+      properties:
+        service:
+          title: Nombre del servicio
+          type: string
+          default: autorizacion-svc
+        owner:
+          title: Owner
+          type: string
+          default: equipo-autorizacion
+        costCenter:
+          title: Cost-center
+          type: string
+          default: CC-1002
+        desde:
+          title: Lectura desde
+          type: string
+          enum: [inicio, nuevos]
+          enumNames: [Desde el inicio del stream, Solo eventos nuevos]
+          default: inicio
+  steps:
+    - id: ejecutar
+      name: Ejecutar GP suscriptor
+      action: poc:ejecutar-gp
+      input:
+        target: gp-suscriptor
+        service: ${{ parameters.service }}
+        owner: ${{ parameters.owner }}
+        costCenter: ${{ parameters.costCenter }}
+        desde: ${{ parameters.desde }}
+  output:
+    text:
+      - title: Repo de materialización generado en local
+        content: generated/${{ parameters.service }}

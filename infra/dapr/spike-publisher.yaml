@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comercios-spike
+  namespace: comercios
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: comercios-spike}
+  template:
+    metadata:
+      labels: {app: comercios-spike}
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "comercios-svc"
+    spec:
+      containers:
+        - name: app
+          image: curlimages/curl:8.10.1
+          command: ["sleep", "3600"]
